@@ -1,0 +1,35 @@
+{% extends "admin/main_page.html" %}
+{% block title %}Profil {{ user[0] }} {{ user[1] }} - OP{% endblock %}
+{% block content %}
+    <h3 class="pb-2">Profil uživatele</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingInputName" placeholder="jmeno" value="{{ user[1] }}">
+                    <label for="floatingInputName"><i class="bi bi-person"></i> Jméno</label>
+                </div>
+            </div>
+            <div class="col-lg">
+                <div class="col mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingInputSurname" placeholder="prijmeni" value="{{ user[2] }}">
+                    <label for="floatingInputSurname"><i class="bi bi-person"></i> Příjmení</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingInputEmail" placeholder="email" value="{{ user[3] }}">
+                    <label for="floatingInputEmail"><i class="bi bi-envelope"></i> Email</label>
+                </div>
+            </div>
+            <div class="col-lg">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingInputPhone" placeholder="telefon" value="{{ user[4] }}">
+                    <label for="floatingInputPhone"><i class="bi bi-telephone"></i> Telefon</label>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

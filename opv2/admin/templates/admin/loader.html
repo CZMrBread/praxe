@@ -1,0 +1,11 @@
+<body style="overflow:hidden;">
+<div class="position-fixed top-50 start-50 translate-middle" style="z-index:2000;">
+  <div class="spinner-border text-primary" role="status" style="width: 10rem; height: 10rem;">
+      <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<script>
+    window.onload = function(){ document.querySelector(".spinner-border").style.display = "none";
+                                document.querySelector("body").style.overflow = "auto";}
+</script>
+</body>

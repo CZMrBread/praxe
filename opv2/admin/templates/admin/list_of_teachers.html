@@ -1,0 +1,60 @@
+{% extends "admin/main_page.html" %}
+{% block title %}Seznam žáků - OP{% endblock %}
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+{% endblock %}
+{% block print %}
+<table id="data" class="caption-top table table-bordered table-striped w-100">
+    <caption>Seznam žáků</caption>
+    <thead class="table-light">
+        <tr>
+        <th scope="col">Jméno</th>
+        <th scope="col">Příjmení</th>
+        <th scope="col">Role</th>
+        <th scope="col">Email</th>
+        <th scope="col">Telefon</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for teacher in teachers %}
+            <tr onclick="window.location.href='/admin/uzivatel/{{ teacher[3] }}'" style="cursor: pointer;">
+            <td>{% if teacher[1] is not none  %} {{ teacher[1] }} {% else %} {% endif %}</td>
+            <td>{% if teacher[2] is not none  %} {{ teacher[2] }} {% else %} {% endif %}</td>
+            <td>{% if teacher[6] is not none  %} {{ teacher[6] }} {% else %} {% endif %}</td>
+            <td>{% if teacher[3] is not none  %} {{ teacher[3] }} {% else %} {% endif %}</td>
+            <td>{% if teacher[4] is not none  %} {{ teacher[4] }} {% else %} {% endif %}</td>
+            </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+  $('#data').DataTable( {
+    'scrollX': true,
+    dom: 'Bfrtip',
+    lengthMenu: [
+        [ -1, 10, 25, 50,  ],
+        [ 'Zobrazit vše', '10 řádků', '25 řádků', '50 řádků' ]
+    ],
+    buttons: [
+        'pageLength', 'colvis', 'excel', 'pdf', 'print'
+    ],
+    language: {
+        url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/cs.json'},
+    columns: [
+        null,
+        null,
+        {searchable: false},
+        null,
+        {orderable: false}
+    ]
+  });
+} );
+</script>
+{% endblock %}

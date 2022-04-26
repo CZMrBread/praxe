@@ -1,0 +1,69 @@
+{% extends "user/main_page.html" %}
+{% block title %}Deník den {{ den }}.den{% endblock %}
+{% block content %}
+    <form action="{{ url_for("user.day_page", den=den) }}" method="post">
+        <div class="mb-4">
+            <div class="form-floating">
+                <input type="date" class="form-control" id="datumDne" name="datumDne" placeholder="datum" disabled>
+                <label for="datumDne">Datum dne</label>
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="nadpisDne" name="nadpisDne" placeholder="den">
+                <label for="nadpisDne">Nadpis dne (převládající aktivita)</label>
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="form-floating">
+                <input type="number" class="form-control" id="pocetHodin" name="pocetHodin" placeholder="1">
+                <label for="pocetHodin">Počet hodin</label>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="form-label" for="photo">Dokladující foto (.jpg, .pgn, .gif)</label>
+            <input type="file" accept=".jpg .png .gif" class="form-control" id="photo" name="photo" placeholder="image">
+        </div>
+        <p>
+        Zde průběžně vpisujte získané dovednosti či zkušenosti během pracovního dne např:<br>
+        Zvládnu nastavit...<br>
+        Umím nakonfigurovat...<br>
+        Dokážu vyrobit...<br>
+        Mám přehled o...<br>
+        Navrhnu...<br>
+        Zvládnu předělat...<br>
+        Dokáži setavit...<br>
+        Prohloubil jsem si znalosti o...<br>
+        </p>
+        <div class="mb-4">
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" id="znalost" name="znalost"
+                          style="height: 100px"></textarea>
+                <label for="znalost">Získaná dovednost/zkušenost:</label>
+            </div>
+        </div>
+        {% if den=="1" %}
+        <p>
+            BOZP: proškolen ano či ne<br>
+            Pracovní doba: (od kdy do kdy, přestávka apod.)<br>
+            Domluvená pracovní náplň na období praxe:<br>
+            Práce na místě či výjezdy apod.<br>
+            Stručný popis pracovního prostředí:<br>
+            Popis činností během dne:<br>
+        </p>
+        {% else %}
+        <p>
+            Další dny již jen: (viz metodika na wiki.sps-pi.cz)<br>
+            Popis činností během dne:<br>
+        </p>
+        {% endif %}
+        <div class="mb-4">
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" id="cinnost" name="cinnost"
+                          style="height: 100px"></textarea>
+                <label for="cinnost">Popis dne:</label>
+            </div>
+        </div>
+        <input type="submit" class="mb-5 btn btn-primary float-end w-100" value="Uložit">
+    </form>
+{% endblock %}

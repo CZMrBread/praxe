@@ -1,0 +1,19 @@
+{% extends "user/main_page.html" %}
+{% block title %}Úvod - OP{% endblock %}
+{% block link %}
+    <link href="{{ url_for('static', filename='fullcalendar-5.10.2/lib/main.css') }}" rel='stylesheet'>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-5 order-lg-2">
+        <div id="calendar"></div>
+    </div>
+    <div class="col-lg-7 order-lg-1">
+        <h1>Vítej, uživateli {{ jmeno }}.</h1>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    <script src="{{  url_for('static', filename='fullcalendar-5.10.2/lib/main.js')  }}"></script>
+    <script src="{{  url_for('static', filename='fullcalendar_config.js')  }}"></script>
+{% endblock %}

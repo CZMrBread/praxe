@@ -1,0 +1,158 @@
+{% extends "user/main_page.html" %}
+{% block title %}Profil firmy {{ firma[2] }} - OP{% endblock %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="https://api.mapy.cz/loader.js"></script>
+<script>Loader.load()</script>
+<script>
+    $(document).tooltip({
+        classes: {
+            "ui-tooltip": "highlight"
+        }
+    });
+</script>
+{% endblock %}
+{% block print %}
+<div class="row">
+    <h3 class="col-lg-4">Profil firmy {{ firma[2] }}</h3>
+    <div class="col-lg-8">
+        <button class="btn btn-primary my-3 w-100" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseZapsatPraxi" aria-expanded="false" aria-controls="collapseZapsatPraxi">
+            Zapsat praxi u firmy
+        </button>
+    </div>
+</div>
+<div class="collapse mb-2" id="collapseZapsatPraxi">
+    <div class="card card-body">
+        <form method="post">
+            <div class="form-floating">
+                <select class="form-select" id="instruktorLabel" aria-label="Floating label select example" name="instruktor">
+                    <option value="None" selected>Instruktor nevybrán</option>
+                    {% for instruktor in instruktori %}
+                        <option value="{{ instruktor[0] }}">{{ instruktor[1] }} {{ instruktor[2] }}</option>
+                    {% endfor %}
+                </select>
+                <label for="instruktorLabel">Vyberte instruktora</label>
+            </div>
+            <input class="mt-2 btn btn-primary w-100" type="submit" value="Zapsat praxi u firmy">
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <tbody>
+                    <tr>
+                        <th>Název</th>
+                        <td>{{ firma[2] }}</td>
+                    </tr>
+                    <tr>
+                        <th>IČO</th>
+                        <td>{{ firma[3] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Adresa sídla</th>
+                        <td>{{ firma[7] }}, {{ firma[8] }} {{ firma[9] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Adresa výkonu praxe</th>
+                        <td>{{ firma[4] }}, {{ firma[5] }} {{ firma[6] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro IT</th>
+                        <td>{% if firma[11] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro ELT</th>
+                        <td>{% if firma[12] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro Projektanty</th>
+                        <td>{% if firma[13] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro VOŠ</th>
+                        <td>{% if firma[14] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Zástupce</th>
+                        <td>{{ firma[15] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Web</th>
+                        <td>{{ firma[10] }}</td>
+                    </tr>
+                    <tr>
+                        <th>GPS</th>
+                        <td id="gps"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card" style="touch-action: none;">
+            <div class="card-body" id="card-body">
+                <div id="mapa" style="width:854px; height:480px;"></div>
+                <script type="text/javascript">
+                    let vysledky;
+
+                    new SMap.Geocoder("{{ firma[4] }}, {{ firma[5] }} {{ firma[6] }}", getVysledky);
+
+                    function getVysledky(geocoder) {
+                        vysledek = geocoder.getResults()[0].results[0];
+
+                        if (!vysledek){ //Pokud nebyla nalezena lokace
+                            mapCard = document.getElementById("card-body")
+                            mapCard.style.backgroundColor = "#828181";
+                            mapCard.innerHTML = "Došlo k chybě při načítání mapy";
+                            mapCard.style.color = "#4e4e4e";
+                            return
+                        }
+                        document.getElementById("gps").textContent = `${vysledek.coords.x} ${vysledek.coords.y}`
+
+                        var stred = SMap.Coords.fromWGS84(vysledek.coords.x, vysledek.coords.y);
+                        var mapa = new SMap(JAK.gel("card-body"), stred, 14);
+                        mapa.addDefaultLayer(SMap.DEF_BASE).enable();
+
+                        mapa.addControl(new SMap.Control.Sync()); /* Aby mapa reagovala na změnu velikosti průhledu */
+                        var mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
+                        mapa.addControl(mouse);
+                        //mapa.addDefaultControls();
+
+                        var layer = new SMap.Layer.Marker();
+                        mapa.addLayer(layer);
+                        layer.enable();
+
+                        var card = new SMap.Card();
+                        card.getHeader().innerHTML = "<strong>{{ firma[2] }}</strong>";
+                        card.getBody().innerHTML = "IČO: {{ firma[3] }}";
+
+                        var marker = new SMap.Marker(stred, "myMarker", {
+                            title: "{{ firma[2] }}"
+                        });
+                        marker.decorate(SMap.Marker.Feature.Card, card);
+                        layer.addMarker(marker);
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

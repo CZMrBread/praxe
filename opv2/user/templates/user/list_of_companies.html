@@ -1,0 +1,79 @@
+{% extends "user/main_page.html" %}
+{% block title %}Seznam firem - OP{% endblock %}
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+{% endblock %}
+{% block content %}
+    <div class="row justify-content-between">
+        <div class="col-auto mb-2">
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example" onchange="location = this.value;">
+                    <option value="{{ url_for("user.list_of_companies", stav="schvalena") }}" {% if stav=="schvalene" %}selected{% endif %}>Schválené</option>
+                    <option value="{{ url_for("user.list_of_companies", stav="akceptovatelna") }}" {% if stav=="akceptovatelna" %}selected{% endif %}>Akceptovatelné</option>
+                </select>
+                <label for="floatingSelect">Filtr <i class="bi bi-funnel-fill"></i></label>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block print %}
+        <table id="data" class="caption-top table table-bordered table-striped align-middle w-100">
+        <caption>Seznam firem</caption>
+        <thead class="table-light">
+            <tr>
+            <th scope="col">Název</th>
+            <th scope="col">Adresa</th>
+            <th scope="col">IČO</th>
+            <th scope="col">Web</th>
+            <th scope="col">IT</th>
+            <th scope="col">ELT</th>
+            <th scope="col">PRJ</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for firma in firmy %}
+                <tr onclick="window.location.href='/firma/{{ firma[0] }}'" style="cursor: pointer;">
+                <td>{{ firma[1] }}</td>
+                <td>{{ firma[2] }} {{ firma[3] }}, {{ firma[4] }}</td>
+                <td>{{ firma[8] }}</td>
+                <td>{{ firma[9] }}</td>
+                <td>{% if firma[10] == 1 %}<i class="text-success bi bi-check-square-fill"></i><p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i><p class="d-none">0</p>{% endif %}</td>
+                <td>{% if firma[11] == 1 %}<i class="text-success bi bi-check-square-fill"></i><p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i><p class="d-none">0</p>{% endif %}</td>
+                <td>{% if firma[12] == 1 %}<i class="text-success bi bi-check-square-fill"></i><p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i><p class="d-none">0</p>{% endif %}</td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+  $('#data').DataTable( {
+    'scrollX': true,
+    dom: 'Bfrtip',
+    lengthMenu: [
+        [ -1, 10, 25, 50,  ],
+        [ 'Zobrazit vše', '10 řádků', '25 řádků', '50 řádků' ]
+    ],
+    buttons: [
+        'pageLength', 'colvis'
+    ],
+    language: {
+        url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/cs.json'},
+    columns: [
+        null,
+        {orderable: false},
+        {orderable: false},
+        {orderable: false},
+        {searchable: false},
+        {searchable: false},
+        {searchable: false}
+    ]
+  });
+} );
+</script>
+{% endblock %}

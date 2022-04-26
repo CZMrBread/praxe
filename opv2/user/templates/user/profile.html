@@ -1,0 +1,72 @@
+{% extends "user/main_page.html" %}
+{% block title %}Profil - OP{% endblock %}
+{% block content %}
+    <h3 class="pb-2">Editace profilu</h3>
+    <div class="container">
+        <form id="profileForm" method="post">
+            <div class="row">
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="text" class="form-control" id="floatingName" name="floatingName" value="{{ user[1] }}" placeholder="Jméno" disabled>
+                        <label for="floatingName"><i class="bi bi-person"></i> Jméno</label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="text" class="form-control" id="floatingSurname" name="floatingSurname" value="{{ user[2] }}" placeholder="Přijmení" disabled>
+                        <label for="floatingSurname"><i class="bi bi-person"></i> Přijmení</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="email" class="form-control" id="floatingEmail" name="floatingEmail" value="{{ user[3] }}" placeholder="Email" disabled>
+                        <div class="invalid-feedback">Neplatný email</div>
+                        <label for="floatingEmail"><i class="bi bi-envelope"></i> Email</label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="tel" class="form-control" id="floatingTelephone" name="floatingTelephone" maxlength="15" value="{{ user[4] }}" placeholder="Telefon">
+                        <label for="floatingTelephone"><i class="bi bi-telephone"></i> Telefon</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 form-floating">
+                <input type="date" id="floatingDatNar" name="floatingDatNar" class="form-control" value="{{ user[5] }}">
+                <label for="floatingDatNar"><i class="bi bi-calendar"></i> Datum narození</label>
+            </div>
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="mb-2 form-floating">
+                        <input type="text" id="floatingUlice" name="floatingUlice" class="form-control" placeholder="Ulice a č.p." value="{{ user[8] }}">
+                        <label for="floatingUlice"><i class="bi bi-house-door"></i> Ulice a č.p.</label>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="mb-2 form-floating">
+                        <input type="text" id="floatingMesto" name="floatingMesto" class="form-control" placeholder="Město" value="{{ user[9] }}">
+                        <label for="floatingMesto"><i class="bi bi-geo-alt"></i> Město</label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="tel" id="floatingPSC" name="floatingPSC" class="form-control" placeholder="PSČ" maxlength="6" value="{{ user[10] }}">
+                        <label for="floatingPSC"> PSČ</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 form-floating">
+                <select class="form-select" id="floatingObor" name="floatingObor" aria-label="Floating label select example">
+                    <option selected></option>
+                </select>
+                <label for="floatingObor"><i class="bi bi-person-rolodex"></i> Studovaný obor</label>
+            </div>
+            <button type="submit" class="w-25 btn btn-primary float-end">Uložit údaje</button>
+        </form>
+    </div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='profile.js') }}"></script>
+
+{% endblock %}

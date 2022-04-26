@@ -1,0 +1,48 @@
+{
+  "name": "opv2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode=development",
+    "watch": "webpack --mode=development --watch",
+    "prod": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OPv2/Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OPv2/Backend/issues"
+  },
+  "homepage": "https://github.com/OPv2/Backend#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "mini-css-extract-plugin": "^2.6.0",
+    "node-sass": "^7.0.1",
+    "sass-loader": "^12.6.0",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-manifest-plugin": "^5.0.0"
+  },
+  "dependencies": {
+    "@fullcalendar/bootstrap5": "^5.11.0",
+    "@fullcalendar/core": "^5.11.0",
+    "@fullcalendar/daygrid": "^5.11.0",
+    "@fullcalendar/list": "^5.11.0",
+    "@fullcalendar/timegrid": "^5.11.0",
+    "bootstrap": "^5.1.3",
+    "datatables.net-bs5": "^1.11.5",
+    "datatables.net-buttons-bs5": "^2.2.2",
+    "datatables.net-fixedcolumns-bs5": "^4.0.2",
+    "datatables.net-responsive-bs5": "^2.2.9",
+    "icons": "^1.0.0",
+    "jquery": "^3.6.0",
+    "jszip": "^3.9.1",
+    "pdfmake": "^0.2.5"
+  }
+}

@@ -1,0 +1,166 @@
+{% extends "admin/main_page.html" %}
+{% block title %}Přehled praxí třídy - OP{% endblock %}
+{% block content %}
+    <h2>Přehled praxí třídy</h2>
+    <div class="row justify-content-between">
+        <div class="col-auto">
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addUcitelModal">
+                Přiřadit učitele
+            </button>
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#praxeModal">
+                Editovat praxi
+            </button>
+        </div>
+        <div class="col-auto mb-2">
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example" onchange="location = this.value;">
+                    <option>Aktuální rok</option>
+                    <option>2020/2021</option>
+                </select>
+                <label for="floatingSelect">Školní rok</label>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addUcitelModal" tabindex="-1" aria-labelledby="addUcitelModalLabel" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addUcitelModalLabel">Přidat učitele do praxe</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingUcitel" name="ucitel" placeholder="Jmeno" autocomplete="off">
+                            <div class="position-absolute invisible" id="datalist" style="z-index: 10;"></div>
+                            <label for="floatingUcitel">Jméno učitele</label>
+                        </div>
+                        <div class="row">
+                        {% for student in students %}
+                            <div class="col-lg-6">
+                                <div class="form-check form-switch fs-5">
+                                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheck{{ student[0] }}" name="{{ student[0] }}">
+                                  <label class="form-check-label" for="flexSwitchCheck{{ student[0] }}">{{ student[1] }} {{ student[2] }}</label>
+                                </div>
+                                <hr>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        <input type="submit" class="w-100 btn btn-primary" value="Přidat učitele do praxe" name="addUcitel">
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="praxeModal" tabindex="-1" aria-labelledby="praxeModalLabel" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="praxeModalLabel">Editovat dny praxe</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h4>Editovat začátek a konec praxe</h4>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-floating mb-2">
+                                    <input type="date" class="form-control" id="zacatek" name="konec" placeholder="date"
+                                           value="{{ dny_praxe[0][0] }}">
+                                    <label for="zacatek">Začátek praxe</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-floating mb-2">
+                                    <input type="date" class="form-control" id="konec" name="zacatek" placeholder="date"
+                                           value="{{ dny_praxe[-1][0] }}">
+                                    <label for="konec">Konec praxe</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4>Editovat dny praxe</h4>
+                        {% for den in dny_praxe %}
+                            <div class="row align-items-center">
+                                <div class="col-lg-3">
+                                    <div class="form-floating mb-2">
+                                        <input type="date" class="form-control" id="den" name="den" placeholder="date"
+                                               value="{{ den[0] }}" disabled>
+                                        <label for="den">Den praxe</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9 pt-2 pt-lg-0">
+                                    <div class="fs-5 form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="{{ den[0] }}" id="{{ den[0] }}-pracovni" value="0" {% if den[1] == "pracovni" %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ den[0] }}-pracovni">Pracovní den</label>
+                                    </div>
+                                    <div class="fs-5 form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="{{ den[0] }}" id="{{ den[0] }}-vikend" value="1" {% if den[1] == "vikend" %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ den[0] }}-vikend">Víkend</label>
+                                    </div>
+                                    <div class="fs-5 form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="{{ den[0] }}" id="{{ den[0] }}-vylouceny" value="2" {% if den[1] == "vylouceny" %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ den[0] }}-vylouceny">Vyloučený den</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        {% endfor %}
+                        <input type="submit" class="btn btn-primary w-100" name="edit_praxe" value="Upravit dny praxe">
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block print %}
+    {% for ucitel in ucitele %}
+        <table class="caption-top table table-bordered table-striped align-middle w-100">
+            <thead>
+            <tr>
+                {% if ucitel[0] is none %}
+                    <th><h4>Učitel nepřiřazen</h4></th>
+                {% else %}
+                    <th><h4>Učitel {{ ucitel[1] }} {{ ucitel[2] }}</h4></th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tr>
+                <td>
+                    <table class="caption-top table table-bordered table-striped align-middle w-100">
+                        <thead>
+                        <tr>
+                            <th><h6>Jméno Příjmení</h6></th>
+                            <th><h6>Firma</h6></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for student in students %}
+                            {% if student[6] == ucitel[0] %}
+                                <tr>
+                                    <td>{{ student[1] }} {{ student[2] }}</td>
+                                    <td>{% if student[3] is none %}Firma nevybrána{% else %}{{ student[3] }}{% endif %}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    {% endfor %}
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="{{ url_for('static', filename='autocomplete.js') }}"></script>
+<script type="text/javascript">
+    const autocomplete_list = [{% for ucitel in vyber_ucitele %}'{{ ucitel[1] }} {{ ucitel[2] }}',{% endfor %}];
+    set_autocomplete('floatingUcitel', 'datalist', autocomplete_list, start_at_letters=2, count_results=3);
+</script>
+{% endblock %}

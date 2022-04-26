@@ -1,0 +1,114 @@
+{% extends "admin/main_page.html" %}
+{% block title %}Praxe - OP{% endblock %}
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+{% endblock %}
+{% block content %}
+    <div class="row justify-content-between">
+        <div class="col-auto">
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#praxeModal">
+                Vytvořit praxi
+            </button>
+        </div>
+        <div class="col-auto mb-2">
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example" onchange="location = this.value;">
+                    <option>Aktuální rok</option>
+                    <option>2020/2021</option>
+                </select>
+                <label for="floatingSelect">Školní rok</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="praxeModal" tabindex="-1" aria-labelledby="praxeModalLabel" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="praxeModalLabel">Vytvořit praxi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        <div class="form-floating mb-2">
+                            <select class="form-select" id="floatingTrida" name="floatingTrida" aria-label="Floating label select example">
+                                {% for trida in tridy %}
+                                    <option value="{{ trida[0] }}">{{ trida[0] }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="floatingTrida">Třída</label>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input type="date" class="form-control" id="floatingZacatek" name="floatingZacatek" placeholder="date" required>
+                            <label for="floatingZacatek">Začátek praxe</label>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input type="date" class="form-control" id="floatingKonec" name="floatingKonec" placeholder="date" required>
+                            <label for="floatingKonec">Konec praxe</label>
+                        </div>
+                        <button type="submit" class="w-100 btn btn-primary">Vytvořit praxi</button>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block print %}
+        <table id="data" class="caption-top table table-bordered table-striped align-middle w-100">
+        <caption>Seznam praxí</caption>
+        <thead class="table-light">
+            <tr>
+            <th scope="col">Trida</th>
+            <th scope="col">Začátek praxe</th>
+            <th scope="col">Konec praxe</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for prax in praxe %}
+                <tr onclick="window.location.href='{{ url_for("admin.praxe", trida=prax[0], rok=(prax[3] - 1 + prax[0][1:]| int)) }}'" style="cursor: pointer;">
+                <td>{{ prax[0] }}</td>
+                <td>{{ prax[1].strftime("%d. %m. %Y") }}</td>
+                <td>{{ prax[2].strftime("%d. %m. %Y") }}</td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+  $('#data').DataTable( {
+    'scrollX': true,
+    dom: 'Bfrtip',
+    lengthMenu: [
+        [ -1, 10, 25, 50,  ],
+        [ 'Zobrazit vše', '10 řádků', '25 řádků', '50 řádků' ]
+    ],
+    buttons: [
+        'pageLength', 'colvis', 'excel', 'pdf',
+        {
+              extend: 'print',
+              exportOptions: {
+                stripHtml: false
+              }
+        }
+
+    ],
+    language: {
+        url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/cs.json'},
+    columns: [
+        null,
+        null,
+        null
+    ]
+  });
+} );
+</script>
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends "admin/main_page.html" %}
+{% block title %}Seznam firem - OP{% endblock %}
+{% block link %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+{% endblock %}
+{% block content %}
+
+{% with messages = get_flashed_messages(category_filter=["ICO"])  %}
+    {% if messages %}
+        {% for message in messages %}
+                <div class="alert toast-container position-absolute top-25 start-50 translate-middle-x" style="z-index: 100;">
+                  <div class="toast fade show">
+                    <div class="toast-body alert-danger fs-5 text-center" role="alert">
+                        {{ message }}
+                    </div>
+                  </div>
+                </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+    <div class="row justify-content-between">
+        <div class="col-auto">
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#firmaModal">
+                Přidat firmu
+            </button>
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#generateToken">
+                Přidání firmy žákem
+            </button>
+            {% with messages = get_flashed_messages(category_filter=["create_token"]) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Kliknutím zkopírujte" class="btn-clip btn btn-primary mb-2" data-clipboard-text="{{ url_for("user.add_company", token=message, _external=True) }}">Zkopírovat odkaz</button>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="col-auto mb-2">
+            <div class="form-floating">
+                <select class="form-select" id="floatingSelect" aria-label="Floating label select example" onchange="location = this.value;">
+                    <option value="{{ url_for("admin.list_of_companies", stav="schvalena") }}" {% if stav=="schvalene" %}selected{% endif %}>Schválené</option>
+                    <option value="{{ url_for("admin.list_of_companies", stav="akceptovatelna") }}" {% if stav=="akceptovatelna" %}selected{% endif %}>Akceptovatelné</option>
+                    <option value="{{ url_for("admin.list_of_companies", stav="ceka_na_schvaleni") }}" {% if stav=="ceka_na_schvaleni" %}selected{% endif %}>Čekající na schválení</option>
+                    <option value="{{ url_for("admin.list_of_companies", stav="archiv") }}" {% if stav=="archiv" %}selected{% endif %}>Archiv</option>
+                </select>
+                <label for="floatingSelect">Filtr <i class="bi bi-funnel-fill"></i></label>
+            </div>
+        </div>
+    </div>
+    <!-- Modal single company -->
+    <div class="modal fade" id="firmaModal" tabindex="-1" aria-labelledby="firmaModalLabel" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="firmaModalLabel">Přidat firmu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-sm">
+                                <div class="mb-2 form-floating">
+                                    <input type="text" class="form-control" id="floatingName" name="nazev" placeholder="Název" required>
+                                    <label for="floatingName"><i class="bi bi-person"></i> Název</label>
+                                </div>
+                            </div>
+                            <div class="col-sm">
+                                <div class="mb-2 form-floating">
+                                    <input type="number" class="form-control" id="floatingICO" name="ICO" placeholder="IČO" required>
+                                    <label for="floatingICO"><i class="bi bi-person-square"></i> IČO</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <h3 class="fs-4">Adresa sídla firmy</h3>
+                            <div class="col-sm-4">
+                                <div class="mb-2 form-floating">
+                                    <input type="text" class="form-control" id="floatingMestoSidlo" name="mesto_sidlo" placeholder="Město" required>
+                                    <label for="floatingMestoSidlo"><i class="bi bi-building"></i> Město</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="mb-2 form-floating">
+                                    <input type="text" class="form-control" id="floatingUliceSidlo" name="ulice_sidlo" placeholder="Ulice" required>
+                                    <label for="floatingUliceSidlo"><i class="bi bi-geo-alt"></i> Ulice</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="mb-2 form-floating">
+                                    <input type="number" class="form-control" id="floatingPSCSidlo" name="psc_sidlo" placeholder="PSC" required>
+                                    <label for="floatingPSCSidlo">PSČ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <h3 class="fs-4">Adresa výkonu praxe</h3>
+                            <div class="col-sm-4">
+                                <div class="mb-2 form-floating">
+                                    <input type="text" class="form-control" id="floatingMestoVykon" name="mesto_vykon" placeholder="Město" required>
+                                    <label for="floatingMestoVykon"><i class="bi bi-building"></i> Město</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div class="mb-2 form-floating">
+                                    <input type="text" class="form-control" id="floatingUliceVykon" name="ulice_vykon" placeholder="Ulice" required>
+                                    <label for="floatingUliceVykon"><i class="bi bi-geo-alt"></i> Ulice</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="mb-2 form-floating">
+                                    <input type="number" class="form-control" id="floatingPSCVykon" name="psc_vykon" placeholder="PSC" required>
+                                    <label for="floatingPSCVykon">PSČ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch fs-5 py-1">
+                            <input class="form-check-input" name="IT" type="checkbox" role="switch" id="flexSwitchCheckIT" value="1">
+                            <label class="form-check-label" for="flexSwitchCheckIT"><i class="bi bi-pc-display"></i> Vhodné pro Informační technologie</label>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch fs-5 py-1">
+                            <input class="form-check-input" name="ELE" type="checkbox" role="switch" id="flexSwitchCheckELT" value="1">
+                            <label class="form-check-label" for="flexSwitchCheckELT"><i class="bi bi-motherboard"></i> Vhodné pro Elektrotechnika</label>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch fs-5 py-1">
+                            <input class="form-check-input" name="PROJEKT" type="checkbox" role="switch" id="flexSwitchCheckPRJ" value="1">
+                            <label class="form-check-label" for="flexSwitchCheckPRJ"><i class="bi bi-rulers"></i> Vhodné pro Projektování</label>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch fs-5 py-1">
+                            <input class="form-check-input" name="VOS" type="checkbox" role="switch" id="flexSwitchCheckVOS" value="1">
+                            <label class="form-check-label" for="flexSwitchCheckVOS"><i class="bi bi-mortarboard"></i> Vhodné pro VOŠ</label>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-2 form-floating">
+                                    <input type="text" class="form-control" id="floatingWeb" name="web" placeholder="Web">
+                                    <label for="floatingWeb"><i class="bi bi-globe2"></i> Webové stránky</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-2 form-floating">
+                                    <input type="text" class="form-control" id="floatingZastupce" name="zastupce" placeholder="zastupce">
+                                    <label for="floatingZastupce"><i class="bi bi-person-circle"></i> Zástupce firmy</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 form-floating">
+                            <textarea class="form-control" placeholder="Pracovní činnost" id="floatingPracCinnost" name="cinnost" style="height: 100px"></textarea>
+                            <label for="floatingPracCinnost">Pracovní činnost praktikanta</label>
+                        </div>
+                        <div class="mb-2 form-floating">
+                            <textarea class="form-control" placeholder="Ochrana" id="floatingOchrana" name="pomucky" style="height: 100px"></textarea>
+                            <label for="floatingOchrana">Pracovní ochranné pomůcky</label>
+                        </div>
+                        <div class="mb-2 form-floating">
+                            <textarea class="form-control" placeholder="Poznamka" id="floatingPoznamka" name="poznamka" style="height: 100px"></textarea>
+                            <label for="floatingPoznamka">Poznámka</label>
+                        </div>
+                        <input type="submit" class="w-100 btn btn-primary" name="firma" value="Přidat firmu">
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal generate token -->
+    <div class="modal fade" id="generateToken" tabindex="-1" aria-labelledby="generateTokenLabel" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="generateTokenLabel">Vytvořit token pro žáka</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="form-floating mb-2">
+                            <select class="form-select" id="floatingSelectExpirace" aria-label="Floating label select example" name="expire">
+                              <option value="86400" selected>1 den</option>
+                              <option value="3600">1 hodina</option>
+                              <option value="1800">30 minut</option>
+                              <option value="604800">Týden</option>
+                            </select>
+                            <label for="floatingSelectExpirace">Vyberte čas expirace</label>
+                        </div>
+                        <input type="submit" class="w-100 float-end mb-2 btn btn-primary" name="token" value="Vytvořit token">
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block print %}
+        <table id="data" class="caption-top table table-bordered table-striped align-middle w-100">
+        <caption>Seznam firem</caption>
+        <thead class="table-light">
+            <tr>
+            <th scope="col">Název</th>
+            <th scope="col">Adresa</th>
+            <th scope="col">IČO</th>
+            <th scope="col">Web</th>
+            <th scope="col">IT</th>
+            <th scope="col">ELT</th>
+            <th scope="col">PRJ</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for firma in firmy %}
+                <tr onclick="window.location.href='/admin/firma/{{ firma[0] }}'" style="cursor: pointer;">
+                <td>{{ firma[1] }}</td>
+                <td>{{ firma[5] }}, {{ firma[6] }} {{ firma[7] }}</td>
+                <td>{{ firma[8] }}</td>
+                <td>{{ firma[9] }}</td>
+                <td>{% if firma[10] == 1 %}<i class="text-success bi bi-check-square-fill"></i><p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i><p class="d-none">0</p>{% endif %}</td>
+                <td>{% if firma[11] == 1 %}<i class="text-success bi bi-check-square-fill"></i><p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i><p class="d-none">0</p>{% endif %}</td>
+                <td>{% if firma[12] == 1 %}<i class="text-success bi bi-check-square-fill"></i><p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i><p class="d-none">0</p>{% endif %}</td>
+                </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-colvis-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/datatables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+<script>
+let clipboard = new ClipboardJS('.btn-clip');
+clipboard.on('success', function (e) {
+    let trigger_button = e.trigger;
+    trigger_button.setAttribute('data-bs-original-title', 'Zkopírováno');
+    let btn_tooltip = bootstrap.Tooltip.getInstance(trigger_button);
+    btn_tooltip.show();
+    trigger_button.setAttribute('data-bs-original-title', 'Kliknutím zkopírujte');
+
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function () {
+  $('#data').DataTable( {
+    'scrollX': true,
+    dom: 'Bfrtip',
+    lengthMenu: [
+        [ -1, 10, 25, 50,  ],
+        [ 'Zobrazit vše', '10 řádků', '25 řádků', '50 řádků' ]
+    ],
+    buttons: [
+        'pageLength', 'colvis', 'excel', 'pdf',
+        {
+              extend: 'print',
+              exportOptions: {
+                stripHtml: false
+              }
+        }
+
+    ],
+    language: {
+        url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/cs.json'},
+    columns: [
+        null,
+        {orderable: false},
+        {orderable: false},
+        {orderable: false},
+        {searchable: false},
+        {searchable: false},
+        {searchable: false}
+    ]
+  });
+} );
+</script>
+{% endblock %}

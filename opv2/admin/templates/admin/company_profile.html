@@ -1,0 +1,275 @@
+{% extends "admin/main_page.html" %}
+{% block title %}Profil firmy {{ firma[2] }} - OP{% endblock %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+<script src="https://api.mapy.cz/loader.js"></script>
+<script>Loader.load()</script>
+<script>
+    $(document).tooltip({
+        classes: {
+            "ui-tooltip": "highlight"
+        }
+    });
+</script>
+{% endblock %}
+{% block content %}
+<h3>Profil firmy {{ firma[2] }}</h3>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <tbody>
+                    <tr>
+                        <th>Název</th>
+                        <td>{{ firma[2] }}</td>
+                    </tr>
+                    <tr>
+                        <th>IČO</th>
+                        <td>{{ firma[3] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Adresa sídla</th>
+                        <td>{{ firma[7] }}, {{ firma[8] }} {{ firma[9] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Adresa výkonu praxe</th>
+                        <td>{{ firma[4] }}, {{ firma[5] }} {{ firma[6] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro IT</th>
+                        <td>{% if firma[11] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro ELT</th>
+                        <td>{% if firma[12] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro Projektanty</th>
+                        <td>{% if firma[13] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Vhodné pro VOŠ</th>
+                        <td>{% if firma[14] == 1 %}<i class="text-success bi bi-check-square-fill"></i>
+                            <p class="d-none">1</p>{% else %}<i class="text-danger bi bi-x-square-fill"></i>
+                            <p class="d-none">0</p>{% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Zástupce</th>
+                        <td>{{ firma[15] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Web</th>
+                        <td>{{ firma[10] }}</td>
+                    </tr>
+                    <tr>
+                        <th>GPS</th>
+                        <td id="gps"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card" style="touch-action: none;">
+            <div class="card-body" id="card-body">
+                <div id="mapa" style="width:854px; height:480px;"></div>
+                <script type="text/javascript">
+                    let vysledky;
+
+                    new SMap.Geocoder("{{ firma[4] }}, {{ firma[5] }} {{ firma[6] }}", getVysledky);
+
+                    function getVysledky(geocoder) {
+                        vysledek = geocoder.getResults()[0].results[0];
+
+                        if (!vysledek){ //Pokud nebyla nalezena lokace
+                            mapCard = document.getElementById("card-body")
+                            mapCard.style.backgroundColor = "#828181";
+                            mapCard.innerHTML = "Došlo k chybě při načítání mapy";
+                            mapCard.style.color = "#4e4e4e";
+                            return
+                        }
+                        document.getElementById("gps").textContent = `${vysledek.coords.x} ${vysledek.coords.y}`
+
+                        var stred = SMap.Coords.fromWGS84(vysledek.coords.x, vysledek.coords.y);
+                        var mapa = new SMap(JAK.gel("card-body"), stred, 14);
+                        mapa.addDefaultLayer(SMap.DEF_BASE).enable();
+
+                        mapa.addControl(new SMap.Control.Sync()); /* Aby mapa reagovala na změnu velikosti průhledu */
+                        var mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
+                        mapa.addControl(mouse);
+                        //mapa.addDefaultControls();
+
+                        var layer = new SMap.Layer.Marker();
+                        mapa.addLayer(layer);
+                        layer.enable();
+
+                        var card = new SMap.Card();
+                        card.getHeader().innerHTML = "<strong>{{ firma[2] }}</strong>";
+                        card.getBody().innerHTML = "IČO: {{ firma[3] }}";
+
+                        var marker = new SMap.Marker(stred, "myMarker", {
+                            title: "{{ firma[2] }}"
+                        });
+                        marker.decorate(SMap.Marker.Feature.Card, card);
+                        layer.addMarker(marker);
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<button type="button" class="btn btn-primary mt-3 mt-lg-0" data-bs-toggle="modal" data-bs-target="#firmaModal">
+    Upravit firmu
+</button>
+<div class="modal fade" id="firmaModal" tabindex="-1" aria-labelledby="firmaModalLabel" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="firmaModalLabel">Upravit firmu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    <div class="form-floating mb-2">
+                        <select class="form-select" name="stav" id="firmaStav" aria-label="Floating label select example">
+                            <option value="1" {% if firma[1] == "schvalena" %}selected{% endif %}>Schválená</option>
+                            <option value="2" {% if firma[1] == "akceptovatelna" %}selected{% endif %}>Akceptovatelná</option>
+                            <option value="3" {% if firma[1] == "ceka_na_schvaleni" %}selected{% endif %}>Čekající na schválení</option>
+                            <option value="4" {% if firma[1] == "archiv" %}selected{% endif %}>Archiv</option>
+                        </select>
+                        <label for="firmaStav">Vyberte stav firmy</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="mb-2 form-floating">
+                                <input type="text" class="form-control" id="floatingName" name="nazev"
+                                    placeholder="Název" value="{{ firma[2] }}" required>
+                                <label for="floatingName"><i class="bi bi-person"></i> Název</label>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="mb-2 form-floating">
+                                <input type="number" class="form-control" id="floatingICO" name="ICO"
+                                    placeholder="IČO" value="{{ firma[3] }}" required>
+                                <label for="floatingICO"><i class="bi bi-person-square"></i> IČO</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <h3 class="fs-4">Adresa sídla firmy</h3>
+                        <div class="col-sm-4">
+                            <div class="mb-2 form-floating">
+                                <input type="text" class="form-control" id="floatingMestoSidlo" name="mesto_sidlo"
+                                    placeholder="Město" value="{{ firma[8] }}" required>
+                                <label for="floatingMestoSidlo"><i class="bi bi-building"></i> Město</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="mb-2 form-floating">
+                                <input type="text" class="form-control" id="floatingUliceSidlo" name="ulice_sidlo"
+                                    placeholder="Ulice" value="{{ firma[7] }}" required>
+                                <label for="floatingUliceSidlo"><i class="bi bi-geo-alt"></i> Ulice</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="mb-2 form-floating">
+                                <input type="number" class="form-control" id="floatingPSCSidlo" name="psc_sidlo"
+                                    placeholder="PSC" value="{{ firma[9] }}" required>
+                                <label for="floatingPSCSidlo">PSČ</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <h3 class="fs-4">Adresa výkonu praxe</h3>
+                        <div class="col-sm-4">
+                            <div class="mb-2 form-floating">
+                                <input type="text" class="form-control" id="floatingMestoVykon" name="mesto_vykon" placeholder="Město" value="{{ firma[5] }}" required>
+                                <label for="floatingMestoVykon"><i class="bi bi-building"></i> Město</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="mb-2 form-floating">
+                                <input type="text" class="form-control" id="floatingUliceVykon" name="ulice_vykon" placeholder="Ulice" value="{{ firma[4] }}" required>
+                                <label for="floatingUliceVykon"><i class="bi bi-geo-alt"></i> Ulice</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="mb-2 form-floating">
+                                <input type="number" class="form-control" id="floatingPSCVykon" name="psc_vykon" placeholder="PSC" value="{{ firma[6] }}" required>
+                                <label for="floatingPSCVykon">PSČ</label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-check form-switch fs-5 py-1">
+                        <input class="form-check-input" name="IT" type="checkbox" role="switch" value="1"
+                            id="flexSwitchCheckIT" {% if firma[11] == 1 %}checked{% endif %}>
+                        <label class="form-check-label" for="flexSwitchCheckIT"><i class="bi bi-pc-display"></i> Vhodné
+                            pro Informační technologie</label>
+                    </div>
+                    <hr>
+                    <div class="form-check form-switch fs-5 py-1">
+                        <input class="form-check-input" name="ELE" type="checkbox" role="switch" value="1"
+                            id="flexSwitchCheckELT" {% if firma[12] == 1 %}checked{% endif %}>
+                        <label class="form-check-label" for="flexSwitchCheckELT"><i class="bi bi-motherboard"></i>
+                            Vhodné pro Elektrotechnika</label>
+                    </div>
+                    <hr>
+                    <div class="form-check form-switch fs-5 py-1">
+                        <input class="form-check-input" name="PROJEKT" type="checkbox" role="switch" value="1"
+                            id="flexSwitchCheckPRJ" {% if firma[13] == 1 %}checked{% endif %}>
+                        <label class="form-check-label" for="flexSwitchCheckPRJ"><i class="bi bi-rulers"></i> Vhodné pro
+                            Projektování</label>
+                    </div>
+                    <hr>
+                    <div class="form-check form-switch fs-5 py-1">
+                        <input class="form-check-input" name="VOS" type="checkbox" role="switch" value="1"
+                            id="flexSwitchCheckVOS" {% if firma[14] == 1 %}checked{% endif %}>
+                        <label class="form-check-label" for="flexSwitchCheckVOS"><i class="bi bi-mortarboard"></i>
+                            Vhodné pro VOŠ</label>
+                    </div>
+                    <hr>
+                    <div class="mb-2 form-floating">
+                        <input type="text" class="form-control" id="floatingWeb" name="web" placeholder="Web"
+                            value="{{ firma[10] }}">
+                        <label for="floatingWeb"><i class="bi bi-globe2"></i> Webové stránky</label>
+                    </div>
+                    <div class="mb-2 form-floating pb-2">
+                        <input type="text" class="form-control" id="floatingZastupce" name="zastupce"
+                            placeholder="zastupce" value="{{ firma[15] }}">
+                        <label for="floatingZastupce"><i class="bi bi-person-circle"></i> Zástupce firmy</label>
+                    </div>
+                    <div class="mb-2 form-floating">
+                        <textarea class="form-control" placeholder="Pracovní činnost" name="cinnost" id="floatingPracCinnost" style="height: 100px">{{ firma[16] }}</textarea>
+                        <label for="floatingPracCinnost">Pracovní činnost praktikanta</label>
+                    </div>
+                    <div class="mb-2 form-floating">
+                        <textarea class="form-control" placeholder="Ochrana" id="floatingOchrana" name="pomucky" style="height: 100px">{{ firma[17] }}</textarea>
+                        <label for="floatingOchrana">Pracovní ochranné pomůcky</label>
+                    </div>
+                    <div class="mb-2 form-floating">
+                        <textarea class="form-control" placeholder="Poznamka" id="floatingPoznamka" name="poznamka" style="height: 100px">{{ firma[18] }}</textarea>
+                        <label for="floatingPoznamka">Poznámka</label>
+                    </div>
+                    <input type="submit" class="w-100 btn btn-primary" name="firma" value="Upravit firmu">
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">Zavřít</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

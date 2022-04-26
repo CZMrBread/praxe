@@ -1,0 +1,70 @@
+{% extends "login_api/index_template.html" %}
+{% block title %}Přihlášení - OP{% endblock %}
+{% block login %}
+{% with messages = get_flashed_messages(category_filter=["token"])  %}
+    {% if messages %}
+        {% for message in messages %}
+                <div class="alert toast-container position-absolute p-3 top-0 start-50 translate-middle-x" id="toastPlacement">
+                  <div class="toast fade show">
+                    <div class="toast-body alert-danger fs-5" role="alert">
+                        {{ message }}
+                    </div>
+                  </div>
+                </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% with messages = get_flashed_messages(category_filter=["ICO"])  %}
+    {% if messages %}
+        {% for message in messages %}
+                <div class="alert toast-container position-absolute p-3 top-0 start-50 translate-middle-x" id="toastPlacement">
+                  <div class="toast fade show">
+                    <div class="toast-body alert-danger fs-5" role="alert">
+                        {{ message }}
+                    </div>
+                  </div>
+                </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<main class="m-auto w-100" novalidate style="max-width:330px;">
+    <form class="needs-validation" method="post" action="/login">
+        <a href="/">
+            <img class="mb-4" src="{{ url_for('static', filename='pictures/logo.svg') }}" alt="logo školy" width="150" height="150">
+        </a>
+        <h1 class="h3 mb-3 fw-normal">Přihlásit se</h1>
+        <div class="form-floating">
+            <input type="email" class="form-control {% with messages = get_flashed_messages(category_filter=["email"])  %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+            {% endwith %}"
+           value="{% with messages = get_flashed_messages(category_filter=["email_reuse"])  %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+            {% endwith %}"
+           id="floatingEmail" name="floatingEmail" placeholder="Email">
+            <div class="invalid-feedback">Neznámý uživatel</div>
+            <label for="floatingEmail"><i class="bi bi-person"></i> Email</label>
+        </div>
+        <div class="mb-2 form-floating">
+            <input type="password" class="form-control {% with messages = get_flashed_messages(category_filter=["password"])  %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% endif %}
+            {% endwith %}" id="floatingPassword" name="floatingPassword" placeholder="Password">
+            <div class="invalid-feedback">Nesprávné heslo</div> 
+            <label for="floatingPassword"><i class="bi bi-key"></i> Heslo</label>
+        </div>
+        <button id="loginButton" class="mt-3 w-100 btn btn-lg btn-primary" type="submit">Přihlásit se</button>
+    </form>
+</main>
+{% endblock %}

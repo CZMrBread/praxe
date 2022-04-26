@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image" href="{{ url_for('static', filename='pictures/favicon.png') }}">
+    <link rel="apple-touch-icon" type="image" href="{{ url_for('static', filename='pictures/favicon.png') }}"/>
+    <title>Přídání firmy - OP</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+</head>
+<body class="my-5 container bg-light">
+<h1 class="pb-3">Přídání firmy</h1>
+<div class="row">
+    <form method="POST">
+        <div class="row">
+            <div class="col-sm">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingName" name="nazev" placeholder="Název" required>
+                    <label for="floatingName"><i class="bi bi-person"></i> Název</label>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="mb-2 form-floating">
+                    <input type="number" class="form-control" id="floatingICO" name="ICO" placeholder="IČO" required>
+                    <label for="floatingICO"><i class="bi bi-person-square"></i> IČO</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <h3 class="fs-4">Adresa sídla firmy</h3>
+            <div class="col-sm-4">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingMestoSidlo" name="mesto_sidlo" placeholder="Město" required>
+                    <label for="floatingMestoSidlo"><i class="bi bi-building"></i> Město</label>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingUliceSidlo" name="ulice_sidlo" placeholder="Ulice" required>
+                    <label for="floatingUliceSidlo"><i class="bi bi-geo-alt"></i> Ulice</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="mb-2 form-floating">
+                    <input type="number" class="form-control" id="floatingPSCSidlo" name="psc_sidlo" placeholder="PSC" required>
+                    <label for="floatingPSCSidlo">PSČ</label>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <h3 class="fs-4">Adresa výkonu praxe</h3>
+            <div class="col-sm-4">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingMestoVykon" name="mesto_vykon" placeholder="Město" required>
+                    <label for="floatingMestoVykon"><i class="bi bi-building"></i> Město</label>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingUliceVykon" name="ulice_vykon" placeholder="Ulice" required>
+                    <label for="floatingUliceVykon"><i class="bi bi-geo-alt"></i> Ulice</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="mb-2 form-floating">
+                    <input type="number" class="form-control" id="floatingPSCVykon" name="psc_vykon" placeholder="PSC" required>
+                    <label for="floatingPSCVykon">PSČ</label>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="form-check form-switch fs-5 py-1">
+            <input class="form-check-input" name="IT" type="checkbox" role="switch" id="flexSwitchCheckIT" value="1">
+            <label class="form-check-label" for="flexSwitchCheckIT"><i class="bi bi-pc-display"></i> Vhodné pro Informační technologie</label>
+        </div>
+        <hr>
+        <div class="form-check form-switch fs-5 py-1">
+            <input class="form-check-input" name="ELE" type="checkbox" role="switch" id="flexSwitchCheckELT" value="1">
+            <label class="form-check-label" for="flexSwitchCheckELT"><i class="bi bi-motherboard"></i> Vhodné pro Elektrotechnika</label>
+        </div>
+        <hr>
+        <div class="form-check form-switch fs-5 py-1">
+            <input class="form-check-input" name="PROJEKT" type="checkbox" role="switch" id="flexSwitchCheckPRJ" value="1">
+            <label class="form-check-label" for="flexSwitchCheckPRJ"><i class="bi bi-rulers"></i> Vhodné pro Projektování</label>
+        </div>
+        <hr>
+        <div class="form-check form-switch fs-5 py-1">
+            <input class="form-check-input" name="VOS" type="checkbox" role="switch" id="flexSwitchCheckVOS" value="1">
+            <label class="form-check-label" for="flexSwitchCheckVOS"><i class="bi bi-mortarboard"></i> Vhodné pro VOŠ</label>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingWeb" name="web" placeholder="Web">
+                    <label for="floatingWeb"><i class="bi bi-globe2"></i> Webové stránky</label>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="floatingZastupce" name="zastupce" placeholder="zastupce">
+                    <label for="floatingZastupce"><i class="bi bi-person-circle"></i> Zástupce firmy</label>
+                </div>
+            </div>
+        </div>
+        <div class="mb-2 form-floating">
+            <textarea class="form-control" placeholder="Pracovní činnost" id="floatingPracCinnost" name="cinnost" style="height: 100px"></textarea>
+            <label for="floatingPracCinnost">Pracovní činnost praktikanta</label>
+        </div>
+        <div class="mb-2 form-floating">
+            <textarea class="form-control" placeholder="Ochrana" id="floatingOchrana" name="pomucky" style="height: 100px"></textarea>
+            <label for="floatingOchrana">Pracovní ochranné pomůcky</label>
+        </div>
+        <div class="mb-2 form-floating">
+            <textarea class="form-control" placeholder="Poznamka" id="floatingPoznamka" name="poznamka" style="height: 100px"></textarea>
+            <label for="floatingPoznamka">Poznámka</label>
+        </div>
+        <input type="submit" class="w-100 btn btn-primary" name="firma" value="Přidat firmu">
+    </form>
+</div>
+</body>
+</html>

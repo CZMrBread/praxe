@@ -1,0 +1,66 @@
+{% extends "admin/main_page.html" %}
+{% block title %}Profil - OP{% endblock %}
+{% block content %}
+    <h3 class="pb-2">Editace profilu</h3>
+    <div class="container">
+        <form id="profileForm" method="post">
+            <div class="row">
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="text" class="form-control" id="floatingName" name="floatingName" value="" placeholder="Jméno">
+                        <label for="floatingName"><i class="bi bi-person"></i> Jméno</label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="text" class="form-control" id="floatingSurname" name="floatingSurname" value="" placeholder="Přijmení">
+                        <label for="floatingSurname"><i class="bi bi-person"></i> Přijmení</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="email" class="form-control" id="floatingEmail" name="floatingEmail" value="" placeholder="Email" disabled>
+                        <div class="invalid-feedback">Neplatný email</div>
+                        <label for="floatingEmail"><i class="bi bi-envelope"></i> Email</label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="tel" class="form-control" id="floatingTelephone" name="floatingTelephone" maxlength="15" value="" placeholder="Telefon">
+                        <label for="floatingTelephone"><i class="bi bi-telephone"></i> Telefon</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2 form-floating">
+                <input type="date" id="floatingDatNar" name="floatingDatNar" class="form-control" value="">
+                <label for="floatingDatNar"><i class="bi bi-calendar"></i> Datum narození</label>
+            </div>
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="mb-2 form-floating">
+                        <input type="text" id="floatingUlice" name="floatingUlice" class="form-control" placeholder="Ulice a č.p." value="">
+                        <label for="floatingUlice"><i class="bi bi-house-door"></i> Ulice a č.p.</label>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="mb-2 form-floating">
+                        <input type="text" id="floatingMesto" name="floatingMesto" class="form-control" placeholder="Město" value="">
+                        <label for="floatingMesto"><i class="bi bi-geo-alt"></i> Město</label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="mb-2 form-floating">
+                        <input type="tel" id="floatingPSC" name="floatingPSC" class="form-control" placeholder="PSČ" maxlength="6" value="">
+                        <label for="floatingPSC"> PSČ</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="w-25 btn btn-primary float-end">Uložit údaje</button>
+        </form>
+    </div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='profile.js') }}"></script>
+
+{% endblock %}

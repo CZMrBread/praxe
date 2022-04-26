@@ -1,0 +1,11 @@
+{% extends "login_api/index_template.html" %}
+{% block title %}Error 500{% endblock %}
+{% block login %}
+<main class="m-auto w-100" style="max-width:330px;">
+    <a href="/">
+        <img class="mb-4" src="{{ url_for('static', filename='pictures/logo.svg') }}" alt="logo školy" width="150" height="150">
+    </a>
+    <h1>Něco se pokazilo (500)</h1>
+    <p>Je problém na naší straně. Problém řešíme.</p>
+</main>
+{% endblock %}

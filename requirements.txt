@@ -1,0 +1,9 @@
+flask
+flask-sqlalchemy
+flask-session
+flask-cachecontrol
+mysql-client
+mysql
+mysql-connector-python
+ldap3
+PyJWT

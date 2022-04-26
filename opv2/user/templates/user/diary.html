@@ -1,0 +1,107 @@
+{% extends "user/main_page.html" %}
+{% block title %}Deník - {{ trida }} - OP{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap pb-3">
+<h1 class="flex-fill">Deník - {{ trida }}</h1>
+    <div class="form-floating flex-md-grow-0 flex-fill">
+        <select class="form-select" id="skolniRok" aria-label="Floating label select example">
+          <option value="1">Aktuální rok</option>
+          <option value="2">2020/2021</option>
+          <option value="3">Three</option>
+        </select>
+        <label for="skolniRok">Vyberte rok</label>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-lg-6">
+            <table class="table table-bordered table-striped table-hover">
+                <tbody>
+                    {% for den in dny %}
+                        {{ den }}
+                    {% endfor %}
+                    <tr>
+                        <th>PL 1.</th>
+                        <td>Pracovní list</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6">
+            <form>
+                <h3 class="mb-1">Spokojenost s firmou</h3>
+                <div class="d-flex flex-row">
+                        <input type="radio" class="btn-check" name="spokojenostSFirmou" id="spokojenostSFirmou1" autocomplete="off" required>
+                        <label class="btn btn-outline-success flex-fill mx-2" for="spokojenostSFirmou1">1</label>
+
+                        <input type="radio" class="btn-check" name="spokojenostSFirmou" id="spokojenostSFirmou2" autocomplete="off">
+                        <label class="btn btn-outline-primary flex-fill mx-2" for="spokojenostSFirmou2">2</label>
+
+                        <input type="radio" class="btn-check" name="spokojenostSFirmou" id="spokojenostSFirmou3" autocomplete="off">
+                        <label class="btn btn-outline-warning flex-fill mx-2" for="spokojenostSFirmou3">3</label>
+
+                        <input type="radio" class="btn-check" name="spokojenostSFirmou" id="spokojenostSFirmou4" autocomplete="off">
+                        <label class="btn btn-outline-danger flex-fill mx-2" for="spokojenostSFirmou4">4</label>
+
+                        <input type="radio" class="btn-check" name="spokojenostSFirmou" id="spokojenostSFirmou5" autocomplete="off">
+                        <label class="btn btn-outline-dark flex-fill mx-2" for="spokojenostSFirmou5">5</label>
+                </div>
+                <h3 class="mt-3 mb-1">Přístup garanta</h3>
+                <div class="d-flex flex-row">
+                        <input type="radio" class="btn-check" name="pristupGaranta" id="pristupGaranta1" autocomplete="off" required>
+                        <label class="btn btn-outline-success flex-fill mx-2" for="pristupGaranta1">1</label>
+
+                        <input type="radio" class="btn-check" name="pristupGaranta" id="pristupGaranta2" autocomplete="off">
+                        <label class="btn btn-outline-primary flex-fill mx-2" for="pristupGaranta2">2</label>
+
+                        <input type="radio" class="btn-check" name="pristupGaranta" id="pristupGaranta3" autocomplete="off">
+                        <label class="btn btn-outline-warning flex-fill mx-2" for="pristupGaranta3">3</label>
+
+                        <input type="radio" class="btn-check" name="pristupGaranta" id="pristupGaranta4" autocomplete="off">
+                        <label class="btn btn-outline-danger flex-fill mx-2" for="pristupGaranta4">4</label>
+
+                        <input type="radio" class="btn-check" name="pristupGaranta" id="pristupGaranta5" autocomplete="off">
+                        <label class="btn btn-outline-dark flex-fill mx-2" for="pristupGaranta5">5</label>
+                </div>
+                <h3 class="mt-3 mb-1">Získané dovednosti</h3>
+                <div class="d-flex flex-row">
+                        <input type="radio" class="btn-check" name="ziskaneZkusenosti" id="ziskaneZkusenosti1" autocomplete="off" required>
+                        <label class="btn btn-outline-success flex-fill mx-2" for="ziskaneZkusenosti1">1</label>
+
+                        <input type="radio" class="btn-check" name="ziskaneZkusenosti" id="ziskaneZkusenosti2" autocomplete="off">
+                        <label class="btn btn-outline-primary flex-fill mx-2" for="ziskaneZkusenosti2">2</label>
+
+                        <input type="radio" class="btn-check" name="ziskaneZkusenosti" id="ziskaneZkusenosti3" autocomplete="off">
+                        <label class="btn btn-outline-warning flex-fill mx-2" for="ziskaneZkusenosti3">3</label>
+
+                        <input type="radio" class="btn-check" name="ziskaneZkusenosti" id="ziskaneZkusenosti4" autocomplete="off">
+                        <label class="btn btn-outline-danger flex-fill mx-2" for="ziskaneZkusenosti4">4</label>
+
+                        <input type="radio" class="btn-check" name="ziskaneZkusenosti" id="ziskaneZkusenosti5" autocomplete="off">
+                        <label class="btn btn-outline-dark flex-fill mx-2" for="ziskaneZkusenosti5">5</label>
+                </div>
+                <h3 class="mt-3 mb-1">Pracovní prostředí</h3>
+                <div class="d-flex flex-row">
+                        <input type="radio" class="btn-check" name="pracovniprostredi" id="pracovniprostredi1" autocomplete="off" required>
+                        <label class="btn btn-outline-success flex-fill mx-2" for="pracovniprostredi1">1</label>
+
+                        <input type="radio" class="btn-check" name="pracovniprostredi" id="pracovniprostredi2" autocomplete="off">
+                        <label class="btn btn-outline-primary flex-fill mx-2" for="pracovniprostredi2">2</label>
+
+                        <input type="radio" class="btn-check" name="pracovniprostredi" id="pracovniprostredi3" autocomplete="off">
+                        <label class="btn btn-outline-warning flex-fill mx-2" for="pracovniprostredi3">3</label>
+
+                        <input type="radio" class="btn-check" name="pracovniprostredi" id="pracovniprostredi4" autocomplete="off">
+                        <label class="btn btn-outline-danger flex-fill mx-2" for="pracovniprostredi4">4</label>
+
+                        <input type="radio" class="btn-check" name="pracovniprostredi" id="pracovniprostredi5" autocomplete="off">
+                        <label class="btn btn-outline-dark flex-fill mx-2" for="pracovniprostredi5">5</label>
+                </div>
+                <div class="form-floating">
+                    <textarea class="form-control mt-3 mb-1" placeholder="Zhodnocení průběhu stáže:" id="floatingTextarea" style="height: 200px" required></textarea>
+                    <label for="floatingTextarea">Zhodnocení průběhu stáže:</label>
+                </div>
+                <button type="submit" class="btn btn-primary float-end mt-1 mb-5">Zapsat hodnocení</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
