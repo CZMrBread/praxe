@@ -248,7 +248,7 @@ class Sql_insert:
                                                     cinnost,        # 14
                                                     pomucky,        # 15
                                                     poznamka)       # 16
-                                 values ({17 * '%s, '} %s)""",
+                                 values ({16 * '%s, '} %s)""",
                              (company[0],
                               company[1],
                               company[2],
@@ -267,6 +267,7 @@ class Sql_insert:
                               company[15],
                               company[16]))
             mydb.commit()
+            return True
         else:
             return False
 
@@ -329,18 +330,19 @@ class Sql_insert:
                     f"insert into praxe (zak, trida, od, do) values ('{student[0]}', '{trida}', '{zacatek}', '{konec}')")
                 mydb.commit()
             else:
-                return False
-            mycursor.execute(f"select Id_praxe from praxe where zak='{student[0]}'")
-            praxe = mycursor.fetchone()[0]
-            pocet_dnu = konec - zacatek + datetime.timedelta(days=1)
+                mycursor.execute(f"update praxe set od='{zacatek}', do='{konec}' where zak='{student[0]}' and trida='{trida}'")
+                mydb.commit()
 
-            for i in range(0, pocet_dnu.days):
-                if zacatek.isoweekday() >= 6:
-                    sql_insert.insert_day("vikend", zacatek, praxe[0])
+            praxe = sql_get.get_praxe_by_zak(student[0])
+            zacatek_praxe = praxe[6]
+            konec_praxe = praxe[7]
+            pocet_dnu = konec_praxe - zacatek_praxe + datetime.timedelta(days=1)
+            for i in range(pocet_dnu.days):
+                if zacatek_praxe.isoweekday() >= 6:
+                    sql_insert.insert_day("vikend", zacatek_praxe, praxe[0])
                 else:
-                    sql_insert.insert_day("pracovni", konec, praxe[0])
-                zacatek = zacatek + datetime.timedelta(days=1)
-        print("Done")
+                    sql_insert.insert_day("pracovni", zacatek_praxe, praxe[0])
+                zacatek_praxe = zacatek_praxe + datetime.timedelta(days=1)
 
     # create_praxe("B3", 2021, "2022-02-10", "2022-02-20")
 
